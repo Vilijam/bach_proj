@@ -1,2 +1,0 @@
-MyProperty(obs) = s.rval(obs);
-eval autoBM(E[ MyProperty("avgHappy_Noise")]);

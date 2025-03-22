@@ -1,0 +1,2 @@
+Property,ObtainedValue,Variance,CI,Problems,NSamples
+MyProperty(avgHappy_Noise),0.9608416580245364,0.001586531802885938,0.029746497552900247,0,30

@@ -1,0 +1,2 @@
+MyProperty(obs) = s.rval(obs);
+eval autoRD(E[ MyProperty("avgHappy_Noise")]);
