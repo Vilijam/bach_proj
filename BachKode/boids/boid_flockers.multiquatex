@@ -1,0 +1,10 @@
+MyProperty(x,obs) = 
+	if ( s.rval("steps") >= x ) 
+		then  s.rval(obs)  
+		else # MyProperty(x,obs) fi ;
+eval parametric(E[ MyProperty(x,"avg_distance_from_centroid")],E[ MyProperty(x,"avg_visible_neighbours")],x,1.0,5.0,601.0) ;
+#eval parametric(E[ MyProperty(x,"avg_norm_fly_towards_center")],E[ MyProperty(x,"avg_distance_from_centroid")],x,1.0,5.0,601.0) ;
+#eval parametric(E[ MyProperty(x,"avg_norm_fly_towards_center")],E[ MyProperty(x,"avg_norm_sep_vector")],x,1.0,2.0,301.0) ;
+#eval parametric(E[ MyProperty(x,"avg_neighbor_too_close")],E[ MyProperty(x,"avg_norm_coherence")],x,1.0,2.0,401.0) ;
+#eval parametric(E[ MyProperty(x,"n_agents")],x,1.0,20.0,501.0) ;
+#eval parametric(E[ MyProperty(x,"compactness_of_flock_neighbours")],E[ MyProperty(x,"avg_visible_neighbours")],x,1.0,20.0,601.0) ;
