@@ -31,7 +31,6 @@ class Boid(mesa.Agent):
 
     def __init__(
         self,
-        unique_id,
         model,
         pos,
         speed,
@@ -56,7 +55,7 @@ class Boid(mesa.Agent):
             separate: the relative importance of avoiding close neighbors
             match: the relative importance of matching neighbors' headings
         """
-        super().__init__(unique_id, model)
+        super().__init__(model)
         self.pos = np.array(pos)
         self.speed = speed
         self.direction = direction
@@ -148,7 +147,6 @@ class BoidFlockers(mesa.Model):
         if(len(self.agents)) > 0:
             for agent in self.agents:
                 agent.remove()
-        self.schedule = mesa.time.RandomActivation(self)
         self.space = mesa.space.ContinuousSpace(self.width, self.height, True) # moved here
         self.make_agents()
         
@@ -164,7 +162,6 @@ class BoidFlockers(mesa.Model):
             pos = np.array((x, y))
             direction = np.random.random(2) * 2 - 1
             boid = Boid(
-                unique_id=i,
                 model=self,
                 pos=pos,
                 speed=self.speed,
@@ -174,16 +171,15 @@ class BoidFlockers(mesa.Model):
                 **self.factors,
             )
             self.space.place_agent(boid, pos)
-            self.schedule.add(boid)
             
     def step(self):
-        self.schedule.step()
+        self.agents.do("step")
         if self.get_time() == 200  or self.get_time() == 400:
             #print("Predator encounter event triggered at step",self.get_time())
             self.predator_encounter_event()
         
     def get_time(self):
-        return float(self.schedule.time)
+        return self.steps
         
     def eval(self, obs):
         """
@@ -213,7 +209,7 @@ class BoidFlockers(mesa.Model):
     
     
     def predator_encounter_event(self):
-        for agent in self.schedule.agents:
+        for agent in self.agents:
             agent.cohere_factor=0-agent.cohere_factor
             
 

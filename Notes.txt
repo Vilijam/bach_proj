@@ -9,3 +9,15 @@ In addition,
 
     -sots is used to generate the list of random seeds used by MultiVeStA. If you provide it, the very same analysis (very same simulations) will be performed every time you run this command (for replicability). If this is not of interest, just remove -sots 1
     -vp can be used to disable the generation of interactive plots if not needed.
+
+
+QuaTEx
+
+    -s.rval(0)   -> 1.0 if final step else 0.0   
+    -s.rval(1)   -> returns current simulated time  
+    -s.rval(2)   -> counts the steps of simulation 
+    -s.rval(5)   -> the average time spent by tasks in queues 
+    -s.rval(6)   -> returns the number of executed tasks 
+    -s.rval(11)  -> the ratio os successfully executed small tasks
+    -s.rval(12)  -> the ratio os successfully executed large tasks
+    -s.rval(13)  -> the ratio os successfully executed all tasks

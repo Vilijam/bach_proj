@@ -1,3 +1,5 @@
+x = 7
+
 import mesa
 import random
 import math
@@ -48,7 +50,7 @@ class Schelling(mesa.Model):
     Model class for the Schelling segregation model.
     """
 
-    def __init__(self, width=20, height=20, density=0.8, minority_pc=0.2, homophily=3):
+    def __init__(self, width=20, height=20, density=0.8, minority_pc=0.2, homophily=x):
         super().__init__()
         self.width = width
         self.height = height
@@ -109,3 +111,6 @@ class Schelling(mesa.Model):
         
     def getTime(self):
         return self.steps   
+    
+    def updateParameters(self, change):
+        self.homophily = change
