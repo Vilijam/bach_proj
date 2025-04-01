@@ -30,25 +30,27 @@ public class MV_Runner {
         // BASELINE
 
         Random rd = new Random();
-        int baseParameter = rd.nextInt(9);
+        //int baseParameter = rd.nextInt(9);
+        int baseParameter = 2;
 
         System.out.println("Base parameter set to " + String.valueOf(baseParameter));
         update_Model(baseParameter);
         float[] baseline = run_One_MV(command);
 
         // init SEARCH
-        int change = rd.nextInt(9);
+        int parentGene = rd.nextInt(9);
 
         // Ensure rd doesn't give the same int again.
-        while (change == baseParameter) {
-            change = rd.nextInt(9);
+        while (parentGene == baseParameter) {
+            parentGene = rd.nextInt(9);
         }
 
-        System.out.println("Search starting at " + String.valueOf(change));
+        System.out.println("Search starting at " + String.valueOf(parentGene));
         
-        update_Model(change);
+        update_Model(parentGene);
 
         float[] offspring;
+        int offspringGene;
         float[] parent;
         int searchIteration = 0;
 
@@ -59,7 +61,8 @@ public class MV_Runner {
 
             System.out.println("Starting iteration: " + String.valueOf(searchIteration));
 
-            update_Model(mutate(change, rd));
+            offspringGene = mutate(parentGene, rd); 
+            update_Model(offspringGene);
 
             offspring = run_One_MV(command);
             System.out.println("Offspring evaluation: " + Arrays.toString(offspring));
@@ -77,6 +80,7 @@ public class MV_Runner {
                     
                     System.out.println("Offspring won!");
                     parent = offspring; 
+                    parentGene = offspringGene;
                 
                 } else {
                     System.out.println("Parent won!");
@@ -99,7 +103,7 @@ public class MV_Runner {
 
     private static int mutate(int parent, Random rd) {
         int change = rd.nextInt(7) - 3;
-        int offspring = parent + change;
+        int offspring = Math.max(0,parent + change);
         System.out.println("Offspring mutated by " + String.valueOf(change) + " resulting in parameter " + String.valueOf(offspring));
         return offspring;
     }
@@ -113,7 +117,7 @@ public class MV_Runner {
         return base[0] - base[2] < model[0] && model[0] < base[0] + base[2];
     }
 
-    private static float[] run_One_MV(String command) throws InterruptedException, IOException {
+    public static float[] run_One_MV(String command) throws InterruptedException, IOException {
         ProcessBuilder pb = new ProcessBuilder(command.split(" "));
                     
 
@@ -137,7 +141,7 @@ public class MV_Runner {
         return decipher_MV_Output(result);
     }
             
-    private static float[] decipher_MV_Output(String input) {
+    public static float[] decipher_MV_Output(String input) {
 
         String[] vals = input.split(" ");
         

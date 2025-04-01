@@ -1,4 +1,4 @@
-x = 7
+x = 1
 
 import mesa
 import random
