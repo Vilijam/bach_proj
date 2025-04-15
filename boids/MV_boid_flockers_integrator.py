@@ -69,7 +69,7 @@ if __name__ == '__main__':
 	#Here you should put any initialization code you need to create an instance of
 	#your model_file_name class
 	
-	model=boid_flockers_model.BoidFlockers(population=100, width=100, height=100, speed=2, cohere=0.03, match=0.05)#a
+	model=boid_flockers_model.BoidFlockers(population_size=100, width=100, height=100, speed=2, cohere=0.03, match=0.05)#a
 	#model=boid_flockers_model.BoidFlockers(population=100, width=100, height=100, speed=2, cohere=0.04, match=0.05)#b #cohere=0.09
 	#model=boid_flockers_model.BoidFlockers(100, 100, 100, speed=5, vision=5, cohere=0.09)
 	#model=boid_flockers_model.BoidFlockers(100, 100, 100, speed=5, vision=5, cohere=0.3)
