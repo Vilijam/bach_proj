@@ -1,67 +1,28 @@
 #The following libraries shall be installed 
 #%pip install mesa --quiet
 import mesa
-import random
-import math
 import numpy as np
-
-"""
-Flockers
-=============================================================
-A Mesa implementation of Craig Reynolds's Boids flocker model.
-Uses numpy arrays to represent vectors.
-https://github.com/projectmesa/mesa-examples/blob/main/examples/boid_flockers/boid_flockers/model.py
-"""
 
 
 from mesa.experimental.continuous_space import ContinuousSpaceAgent
 from mesa.experimental.continuous_space import ContinuousSpace
 
-"""A Boid (bird-oid) agent for implementing Craig Reynolds's Boids flocking model.
-
-This implementation uses numpy arrays to represent vectors for efficient computation
-of flocking behavior.
-"""
-
 class Boid(ContinuousSpaceAgent):
-    """A Boid-style flocker agent.
-
-    The agent follows three behaviors to flock:
-        - Cohesion: steering towards neighboring agents
-        - Separation: avoiding getting too close to any other agent
-        - Alignment: trying to fly in the same direction as neighbors
-
-    Boids have a vision that defines the radius in which they look for their
-    neighbors to flock with. Their speed (a scalar) and direction (a vector)
-    define their movement. Separation is their desired minimum distance from
-    any other Boid.
-    """
-
+ 
     def __init__(
         self,
         model,
         space,
         position=(0, 0),
-        speed=1,
+        speed=2,
         direction=(1, 1),
-        vision=1,
+        vision=10,
         separation=1,
-        cohere=0.09,
+        cohere=0.03,
         separate=0.015,
         match=0.05,
     ):
-        """Create a new Boid flocker agent.
-
-        Args:
-            model: Model instance the agent belongs to
-            speed: Distance to move per step
-            direction: numpy vector for the Boid's direction of movement
-            vision: Radius to look around for nearby Boids
-            separation: Minimum distance to maintain from other Boids
-            cohere: Relative importance of matching neighbors' positions (default: 0.03)
-            separate: Relative importance of avoiding close neighbors (default: 0.015)
-            match: Relative importance of matching neighbors' directions (default: 0.05)
-        """
+    
         super().__init__(space, model)
         self.position = position
         self.speed = speed
@@ -76,6 +37,7 @@ class Boid(ContinuousSpaceAgent):
     def step(self):
         """Get the Boid's neighbors, compute the new vector, and move accordingly."""
         neighbors, distances = self.get_neighbors_in_radius(radius=self.vision)
+
         self.neighbors = [n for n in neighbors if n is not self]
 
         # If no neighbors, maintain current direction
@@ -111,10 +73,10 @@ class BoidFlockers(mesa.Model):
         population_size=100,
         width=100,
         height=100,
-        speed=1,
+        speed=2,
         vision=10,
-        separation=2,
-        cohere=0.09,
+        separation=1,
+        cohere=0.03,
         separate=0.015,
         match=0.05,
         seed=None,
@@ -144,6 +106,8 @@ class BoidFlockers(mesa.Model):
             n_agents=self.population_size,
         )
 
+        self.steps = 0
+
         self.make_agents()
 
     def make_agents(self):
@@ -167,10 +131,9 @@ class BoidFlockers(mesa.Model):
     def step(self):
         
         self.agents.shuffle_do("step")
-        if self.steps == 100  or self.steps == 200:
+        if self.steps == 200  or self.steps == 400:
 
-            print("Predator encounter event triggered at step",self.steps)
-            #self.predator_encounter_event()
+            self.predator_encounter_event()
 
     def get_time(self):
         return self.steps
@@ -190,7 +153,7 @@ class BoidFlockers(mesa.Model):
                         sum_pos_neigh += neighbor.position
                     
                     centroid = sum_pos_neigh / float(len(current_agent.neighbors))
-                    cumul_distance+=self.space.calculate_distances(centroid, [current_agent])[0][0]
+                    cumul_distance+=mesa.space.ContinuousSpace.get_distance(self=self.space, pos_1=centroid, pos_2=current_agent.position)
             return cumul_distance/float(len(self.agents))
         
         elif obs == 'avg_visible_neighbours':
