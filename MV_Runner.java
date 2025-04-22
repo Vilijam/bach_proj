@@ -20,21 +20,33 @@ public class MV_Runner {
         String showPlots    = "-vp false ";
         String multiQuaTEx_schelling  = "-f "+schelling_MQadress+" ";
         String multiQuaTEx_boids  = "-f "+boids_MQadress+" ";
-        String parallelism  = "-l 1 ";
+        String parallelism  = "-l 2 ";
         String seedOfSeeds  = "-sots 1 ";
         String significance = "-a 0.05 ";
         String stateDescriptor = "-sd vesta.python.simpy.SimPyState ";
         String blockSize    = "-bs 30 ";
         String delta1       = "-d1 0.1 ";
 
+
+ 
+
         String schelling_command =  "-c -m schelling/MV_python_integrator_schelling.py -sm true " + multiQuaTEx_schelling + parallelism + seedOfSeeds + stateDescriptor + showPlots + blockSize + delta1 + significance + "-otherParams \"/Users/William/AppData/Local/Programs/Python/Python313/python\" -ir 1 -mvad 7E-3 -wm 2 -pw 1 -nb 128 -ibs 8";
-        String boid_command =  "-c -m schelling/MV_python_integrator_schelling.py -sm true " + multiQuaTEx_boids + parallelism + seedOfSeeds + stateDescriptor + showPlots + blockSize + delta1 + significance + "-otherParams \"/Users/William/AppData/Local/Programs/Python/Python313/python\" -ir 1 -mvad 7E-3 -wm 2 -pw 1 -nb 128 -ibs 8";
+        String boid_command =  "-c -m schelling/MV_python_integrator_schelling.py -sm true " + multiQuaTEx_boids + parallelism + seedOfSeeds + stateDescriptor + showPlots + blockSize + delta1 + significance + "-otherParams \"/Users/William/AppData/Local/Programs/Python/Python313/python\" -ir 1 -ms 600";
         String formals = "java -jar";
 
         schelling_command = formals + " " + jarFilePath + " " + schelling_command;
         boid_command =   formals + " " + jarFilePath + " " + boid_command;
 
+ 
+        // Parameterisation
+        // Comparison
 
+        // Initialisation - 
+        // Evaluation - fitness er t-test?
+        // Terminate - inden for CI?
+
+        // Selection
+        // Variation
         
         // BASELINE
         Random rd = new Random();
@@ -128,15 +140,16 @@ public class MV_Runner {
     }
 
     //Assuming n = 30 and significance of 0.05
-    private static double test_result(float[] base, float[] model) {
+    //These parameters should not have bad formats. The Arguments should be shaped so the parameters can be åbne
+    public static double test_result(float[] base, float[] model) {
         double dut = (base[0] - model[0])/ Math.sqrt((base[1] + model[1])/30);
-        System.out.println("Testing model evaluation resulted in t stat: " + String.valueOf(dut));
+        //System.out.println("Testing model evaluation resulted in t stat: " + String.valueOf(dut));
         return dut;
     }
 
     //Assuming 60 dof instead of 58, and significance of 0.05
     private static boolean accept_null(double t_stat) {
-        return t_stat <= 2;
+        return Math.abs(t_stat) <= 2;
     }
 
     public static float[] run_One_MV(String command) throws InterruptedException, IOException {
