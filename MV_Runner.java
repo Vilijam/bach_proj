@@ -24,11 +24,8 @@ public class MV_Runner {
         String seedOfSeeds  = "-sots 1 ";
         String significance = "-a 0.05 ";
         String stateDescriptor = "-sd vesta.python.simpy.SimPyState ";
-        String blockSize    = "-bs 30 ";
+        String blockSize    = "-bs 10 ";
         String delta1       = "-d1 0.1 ";
-
-
- 
 
         String schelling_command =  "-c -m schelling/MV_python_integrator_schelling.py -sm true " + multiQuaTEx_schelling + parallelism + seedOfSeeds + stateDescriptor + showPlots + blockSize + delta1 + significance + "-otherParams \"/Users/William/AppData/Local/Programs/Python/Python313/python\" -ir -1 -mvad 7E-3 -wm 2 -pw 1 -nb 128 -ibs 8";
         String boid_command =  "-c -m schelling/MV_python_integrator_schelling.py -sm true " + multiQuaTEx_boids + parallelism + seedOfSeeds + stateDescriptor + showPlots + blockSize + delta1 + significance + "-otherParams \"/Users/William/AppData/Local/Programs/Python/Python313/python homophily 3 \" -ir 1 -ms 600";
@@ -38,22 +35,22 @@ public class MV_Runner {
         boid_command =   formals + " " + jarFilePath + " " + boid_command;
 
         Random rd = new Random();
+        System.out.println(schelling_command);
 
+        // BASELINE
+        int baseParameter = 6;
+        //int baseParameter = rd.nextInt(9);
 
-        /*
-         // BASELINE
-         int baseParameter = rd.nextInt(9);
+        System.out.println("Base parameter set to " + String.valueOf(baseParameter));
+        update_Model(baseParameter);
+        float[] baseline = run_One_MV(schelling_command);
 
-         System.out.println("Base parameter set to " + String.valueOf(baseParameter));
-         update_Model(baseParameter);
-         float[] baseline = run_One_MV(schelling_command);
- 
-         Genetic_Search(baseline, baseParameter, schelling_command);
+        Genetic_Search(baseline, baseParameter, schelling_command);
 
-         */
+         
 
         
-        int m = 8 ; // objectives
+       /* int m = 8 ; // objectives
         int N = 10; // Amount of sub-problems and pop-size
         int T = 3;  // neighboors
         double[] target = new double[m]; 
@@ -76,7 +73,7 @@ public class MV_Runner {
 
         for (double[] pop1 : pop) {
             System.out.println(Arrays.toString(pop1));
-        } 
+        }  */
 
     }
 
@@ -109,6 +106,33 @@ public class MV_Runner {
         }
 
         return external_pop;
+    }
+
+    private static double[] blackbox(double[][] target, double[] params, int m) {
+        
+        double[][] mv_output = new double[m][3];
+        double[] solution_fitness = new double[m];
+
+        // mv_output = MV-run(params)
+        
+        for (int i = 0; i < m; i++) {
+            solution_fitness[i] = Math.abs(mv_output[i][0] - target[i][0]);
+        }
+
+        return solution_fitness;
+    }
+
+    // check is solutions distance to target mean is within CI
+    private static boolean check_CI(int m, double[] solution_fitness, double[][] target) {
+        for (int i = 0; i < m; i++) {
+            if (solution_fitness[i] > target[i][1]) {
+                // solution is outside CI
+                return false;
+            } 
+        }
+        // solution is not outside CI
+        return true;
+
     }
 
     private static double[] genetic_operation(double[] x1, double[] x2, Random rd) {
@@ -284,7 +308,6 @@ public class MV_Runner {
             update_Model(offspringGene);
 
             offspring = run_One_MV(command);
-            System.out.println("Offspring evaluation: " + Arrays.toString(offspring));
 
             // Check null hypothesis
             double offspringTStat = test_result(baseline, offspring); 
@@ -298,6 +321,9 @@ public class MV_Runner {
             // Check if mutation has better fitness. If so, it becomes parent.
             double fitNew = offspringTStat;
             double fitOld = test_result(baseline, parent);
+
+            System.out.println("offspring T-stat : " + Double.toString(fitNew));
+            System.out.println("parent T-stat : " + Double.toString(fitOld));
 
             if (fitNew < fitOld) { 
                 

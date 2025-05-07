@@ -1,4 +1,4 @@
-x = 2
+x = 6
 
 import mesa
 import random

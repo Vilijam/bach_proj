@@ -1,0 +1,5 @@
+MyProperty(x,obs) = 
+	if ( s.rval("steps") >= x ) 
+		then  s.rval(obs)  
+		else # MyProperty(x,obs) fi ;
+eval parametric(E[ MyProperty(x,"avgHappy_Noise")],x,1001.0,100.0,1501.0) ;
