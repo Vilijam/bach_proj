@@ -1,4 +1,4 @@
-x = 6
+x, y = 4.0, 0.13499999999999998
 
 import mesa
 import random
