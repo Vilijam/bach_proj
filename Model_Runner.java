@@ -79,7 +79,6 @@ public class Model_Runner {
         String line;
         double[][] results = null;
         while ((line = reader.readLine()) != null) {
-            System.out.println(line);
             if (line.equals(" steady-state value of MyProperty(avgHappy_Noise):")) {
                 
                 results = new double[1][3];

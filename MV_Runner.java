@@ -17,9 +17,9 @@ public class MV_Runner {
         String multiQuaTEx_boids  = "-f "+boids_MQadress+" ";
         String parallelism  = "-l 4 ";
         String seedOfSeeds  = "-sots 1 ";
-        String significance = "-a 0.15 ";
+        String significance = "-a 0.05 ";
         String stateDescriptor = "-sd vesta.python.simpy.SimPyState ";
-        String blockSize    = "-bs 20 ";
+        String blockSize    = "-bs 30 ";
         String delta1       = "-d1 0.5 ";
 
         String schelling_command_trans =  "-c -m schelling/MV_python_integrator_schelling.py -sm true " + multiQuaTEx_schelling_trans + parallelism + seedOfSeeds + stateDescriptor + showPlots + blockSize + delta1 + significance + "-otherParams \"/Users/William/AppData/Local/Programs/Python/Python313/python\" -ir -1 -ms 300";
@@ -57,6 +57,8 @@ public class MV_Runner {
         while (parentGene == baseParameter) {
             parentGene = rd.nextInt(9);
         }
+
+        parentGene = 2;
 
         System.out.println("Search starting at " + String.valueOf(parentGene));
         
@@ -117,7 +119,7 @@ public class MV_Runner {
         // Ensuring gene € [0,8]
         int change = 0;
         while (change == 0 || 0 > parent + change || parent + change > 8) { 
-            change = rd.nextInt(7) - 3;             
+            change = rd.nextInt(3) - 1;             
         }
 
         int offspring = parent + change;
